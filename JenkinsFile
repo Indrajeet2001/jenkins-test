@@ -22,9 +22,12 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Application testing started'
-                bat 'echo JAVA_HOME: %JAVA_HOME%'
+                bat "echo JAVA_HOME: ${env.JAVA_HOME}"             
             }
         }
+        
+
+
 
         stage('Deploy') {
             steps {
