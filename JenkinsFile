@@ -9,16 +9,21 @@ pipeline {
         }
 
         stage('Build') {
+            tools {
+                jdk : JAVA 11
+            }
             steps {
                 
                 echo 'Application build started'
-                    
+                bat 'java --version'
+                bat 'javac --version'                    
             }
         }
 
         stage('Test') {
             steps{
                 echo "Application testing started"
+                bat 'echo "JAVA_HOME: %JAVA_HOME%"'
             }
         }
         
