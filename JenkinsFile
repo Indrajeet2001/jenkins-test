@@ -1,36 +1,44 @@
 pipeline {
-    agent any 
+    agent any
 
-    stages{
-        stage('Checkout'){
-            steps{
+    stages {
+        stage('Checkout') {
+            steps {
                 echo 'Source code checkout started'
             }
         }
 
         stage('Build') {
             tools {
-                jdk : JAVA 11
+                jdk 'JAVA 11'
             }
             steps {
-                
                 echo 'Application build started'
-                bat 'java --version'
-                bat 'javac --version'                    
+                bat 'java -version'
+                bat 'javac -version'
             }
         }
 
         stage('Test') {
-            steps{
-                echo "Application testing started"
-                bat 'echo "JAVA_HOME: %JAVA_HOME%"'
+            steps {
+                echo 'Application testing started'
+                bat 'echo JAVA_HOME: %JAVA_HOME%'
             }
         }
-        
+
         stage('Deploy') {
-            steps{
-                echo "Application deployment started"
+            steps {
+                echo 'Application deployment started'
             }
         }
-}
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
 }
