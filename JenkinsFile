@@ -1,0 +1,31 @@
+pipeline {
+    agent any 
+
+    stages{
+        stage('Checkout'){
+            steps{
+                echo 'Source code checkout started'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                
+                echo 'Application build started'
+                    
+            }
+        }
+
+        stage('Test') {
+            steps{
+                echo "Application testing started"
+            }
+        }
+        
+        stage('Deploy') {
+            steps{
+                echo "Application deployment started"
+            }
+        }
+}
+}
