@@ -2,24 +2,32 @@ pipeline {
     agent any
 
     stages {
+        stage('Check Java Version') {
+            tools {
+                jdk 'JAVA-17'
+            }
+            steps {
+                echo 'Checking Jenkins-installed Java version...'
+                bat 'java -version'
+                bat 'echo JAVA_HOME is set to %JAVA_HOME%'
+            }
+        }
+
         stage('Build') {
             steps {
-                echo 'Building the application...'
-                bat 'echo Build Successful'
+                echo 'Build Successful'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Testing the application...'
-                bat 'echo Test Successful'
+                echo 'Test Successful'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying the application...'
-                bat 'echo Deploy Successful'
+                echo 'Deploy Successful'
             }
         }
 
@@ -36,9 +44,8 @@ pipeline {
         success {
             echo 'Pipeline completed successfully!'
         }
-
         failure {
-            echo 'Pipeline failed!'
+            echo 'Pipeline failed! Check the Console Output.'
         }
     }
 }
