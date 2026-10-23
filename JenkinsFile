@@ -3,56 +3,73 @@ pipeline {
     agent any
 
     tools {
-        mvn 'Maven'
-        jdk 'JAVA '
+        maven 'Maven'
+        jdk 'JAVA 11'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch : 'main',
-                url : 'https://github.com/Indrajeet2001/maven-temp.git'
-                bat 'java --version'
-                bat 'mvn --verison'
+                echo 'Checking out Maven project...'
+
+                git branch: 'main',
+                    url: 'https://github.com/Indrajeet2001/maven-temp.git'
+
+                echo 'Checking Java version...'
+                bat 'java -version'
+
+                echo 'Checking Maven version...'
+                bat 'mvn --version'
             }
         }
+
         stage('Build') {
             steps {
+                echo 'Building the application...'
                 bat 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
+                echo 'Running unit tests...'
                 bat 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                echo 'mvn test'
+                echo 'Packaging the application...'
+                bat 'mvn package -DskipTests'
             }
         }
 
         stage('Run Application') {
             steps {
-                bat 'java -cp target/maven-demo-1.0-SNAPSHOT.jar com.example.App'
+                echo 'Running the Java application...'
+                bat 'java -cp target/classes com.example.App'
             }
         }
-        stage('Archive Artifact')
+
+        stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts : 'target/*.jar',
-                                 fingerprint : true
+                echo 'Archiving the JAR file...'
+
+                archiveArtifacts artifacts: 'target/*.jar',
+                                 fingerprint: true
             }
+        }
     }
 
     post {
         success {
             echo 'Pipeline completed successfully!'
         }
+
         failure {
             echo 'Pipeline failed! Check the Console Output.'
         }
+
         always {
             echo 'Pipeline execution finished.'
         }
