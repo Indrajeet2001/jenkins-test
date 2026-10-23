@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -13,25 +14,53 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Check Maven Version') {
+            tools {
+                maven 'Maven'
+                jdk 'JAVA-17'
+            }
             steps {
+                echo 'Checking Jenkins-installed Maven version...'
+                bat 'mvn -version'
+                bat 'echo MAVEN_HOME is set to %MAVEN_HOME%'
+            }
+        }
+
+        stage('Build') {
+            tools {
+                jdk 'JAVA-17'
+                maven 'Maven'
+            }
+            steps {
+                echo 'Building Maven application...'
+                bat 'mvn clean compile'
                 echo 'Build Successful'
             }
         }
 
         stage('Test') {
+            tools {
+                jdk 'JAVA-17'
+                maven 'Maven'
+            }
             steps {
+                echo 'Testing Maven application...'
+                bat 'mvn test'
                 echo 'Test Successful'
             }
         }
 
         stage('Deploy') {
             steps {
+                echo 'Deploying application...'
                 echo 'Deploy Successful'
             }
         }
 
         stage('Run Application') {
+            tools {
+                jdk 'JAVA-17'
+            }
             steps {
                 echo 'Welcome : Nega singh'
                 echo 'Subject : DevOps'
@@ -46,6 +75,9 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed! Check the Console Output.'
+        }
+        always {
+            echo 'Pipeline execution finished.'
         }
     }
 }
