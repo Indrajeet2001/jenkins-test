@@ -2,71 +2,48 @@
 pipeline {
     agent any
 
+    tools {
+        mvn 'Maven'
+        jdk 'JAVA '
+    }
+
     stages {
-        stage('Check Java Version') {
-            tools {
-                jdk 'JAVA-17'
-            }
+        stage('Checkout') {
             steps {
-                echo 'Checking Jenkins-installed Java version...'
-                bat 'java -version'
-                bat 'echo JAVA_HOME is set to %JAVA_HOME%'
+                git branch : 'main',
+                url : 'https://github.com/Indrajeet2001/maven-temp.git'
+                bat 'java --version'
+                bat 'mvn --verison'
             }
         }
-
-        stage('Check Maven Version') {
-            tools {
-                maven 'Maven'
-                jdk 'JAVA-17'
-            }
-            steps {
-                echo 'Checking Jenkins-installed Maven version...'
-                bat 'mvn -version'
-                bat 'echo MAVEN_HOME is set to %MAVEN_HOME%'
-            }
-        }
-
         stage('Build') {
-            tools {
-                jdk 'JAVA-17'
-                maven 'Maven'
-            }
             steps {
-                echo 'Building Maven application...'
                 bat 'mvn clean compile'
-                echo 'Build Successful'
             }
         }
 
         stage('Test') {
-            tools {
-                jdk 'JAVA-17'
-                maven 'Maven'
-            }
             steps {
-                echo 'Testing Maven application...'
                 bat 'mvn test'
-                echo 'Test Successful'
             }
         }
 
-        stage('Deploy') {
+        stage('Package') {
             steps {
-                echo 'Deploying application...'
-                echo 'Deploy Successful'
+                echo 'mvn test'
             }
         }
 
         stage('Run Application') {
-            tools {
-                jdk 'JAVA-17'
-            }
             steps {
-                echo 'Welcome : Nega singh'
-                echo 'Subject : DevOps'
-                echo 'My first Maven application'
+                bat 'java -cp target/maven-demo-1.0-SNAPSHOT.jar com.example.App'
             }
         }
+        stage('Archive Artifact')
+            steps {
+                archiveArtifacts artifacts : 'target/*.jar',
+                                 fingerprint : true
+            }
     }
 
     post {
